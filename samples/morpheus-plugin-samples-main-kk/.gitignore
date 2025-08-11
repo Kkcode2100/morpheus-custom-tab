@@ -1,0 +1,18 @@
+# logs
+/stacktrace.log
+/test/reports
+/logs
+
+# project release file
+/*.war
+
+# "temporary" build files
+/target
+/plugins/
+build/
+build
+.gradle
+.DS_Store
+.idea
+.sdkmanrc
+lib/
