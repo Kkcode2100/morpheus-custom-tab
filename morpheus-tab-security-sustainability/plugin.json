@@ -1,7 +1,10 @@
 {
+  "code": "sec-sus-tab",
   "name": "Security & Sustainability Tab",
+  "description": "Adds an Instance tab with cloud-native Security and Sustainability dashboards (AWS, Azure, GCP).",
   "plugin": "com.example.morpheus.SecSusPlugin",
-  "version": "1.0.9",
+  "version": "1.0.10",
+  "minMorpheusVersion": "8.0.0",
   "providerTypes": [
     {
       "code": "instanceTab",
@@ -18,13 +21,10 @@
     { "name": "azureSecurityUrlTemplate", "type": "string", "defaultValue": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/overview" },
     { "name": "azureSustainabilityUrlTemplate", "type": "string", "defaultValue": "https://portal.azure.com/#blade/Microsoft_Azure_Sustainability/EmissionsImpactDashboardBlade/Overview" },
 
-    { "name": "gcpSecurityUrlTemplate", "type": "string", "defaultValue": "https://console.cloud.google.com/security/command-center?project={projectId}" },
-    { "name": "gcpSustainabilityUrlTemplate", "type": "string", "defaultValue": "https://console.cloud.google.com/billing/{billingAccountId}/carbonfootprint" },
-
     { "name": "keys.aws.accountId", "type": "string", "defaultValue": "aws:accountId" },
     { "name": "keys.aws.instanceId", "type": "string", "defaultValue": "aws:instanceId" },
 
-    { "name": "keys.azure subscriptionId", "type": "string", "defaultValue": "azure:subscriptionId" },
+    { "name": "keys.azure.subscriptionId", "type": "string", "defaultValue": "azure:subscriptionId" },
     { "name": "keys.azure.resourceGroup", "type": "string", "defaultValue": "azure:resourceGroup" },
     { "name": "keys.azure.vmName", "type": "string", "defaultValue": "azure:vmName" },
 
