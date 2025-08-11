@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.example.morpheus'
-version = '1.0.10'
+version = '1.0.11'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -21,6 +21,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
 }
 
+ext.pluginClass = 'com.example.morpheus.SecSusPlugin'
+
 // Ensure plugin.json is included in the resources output
 tasks.named('processResources') {
     from("${projectDir}/plugin.json") {
@@ -28,9 +30,25 @@ tasks.named('processResources') {
     }
 }
 
-// Publish shaded JAR
+// Standard jar manifest
+tasks.named('jar') {
+    manifest {
+        attributes(
+            'Plugin-Class': pluginClass,
+            'Plugin-Version': project.version
+        )
+    }
+}
+
+// Publish shaded JAR with inherited manifest
 shadowJar {
     archiveClassifier.set('all')
+    manifest {
+        attributes(
+            'Plugin-Class': pluginClass,
+            'Plugin-Version': project.version
+        )
+    }
 }
 
 build.dependsOn shadowJar
