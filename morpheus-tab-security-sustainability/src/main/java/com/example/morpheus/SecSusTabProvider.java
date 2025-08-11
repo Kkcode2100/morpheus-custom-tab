@@ -11,6 +11,10 @@ import com.morpheusdata.views.ViewModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class SecSusTabProvider extends AbstractInstanceTabProvider {
   private static final Logger log = LoggerFactory.getLogger(SecSusTabProvider.class);
 
@@ -39,8 +43,16 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
 
   @Override
   public HTMLResponse renderTemplate(Instance instance) {
-    ViewModel<Object> model = new ViewModel<>();
-    return getRenderer().renderTemplate("views/addon-url.html", model);
+    Map<String,Object> vm = new HashMap<>();
+    vm.put("links", List.of(Map.of("label","Test Link","href","https://example.com")));
+
+    // Debug: confirm template exists in classpath
+    var res = getClass().getClassLoader().getResource("renderer/hbs/addon-url.hbs");
+    log.info("addon-url.hbs resource={}", res);
+
+    ViewModel<Map<String,Object>> model = new ViewModel<>();
+    model.object = vm;
+    return getRenderer().renderTemplate("addon-url", model);
   }
 
   @Override
