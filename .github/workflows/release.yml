@@ -23,13 +23,38 @@ jobs:
         run: chmod +x morpheus-tab-security-sustainability/gradlew
 
       - name: Build plugin JAR
+        id: build
         working-directory: morpheus-tab-security-sustainability
-        run: ./gradlew clean build --no-daemon --stacktrace
+        run: |
+          ./gradlew clean build --no-daemon --stacktrace
+          echo "jar_path=$(ls -1 build/libs/*.jar | head -n1)" >> $GITHUB_OUTPUT
+
+      - name: Compute SHA-256
+        id: sha
+        run: |
+          echo "sha=$(sha256sum "${{ steps.build.outputs.jar_path }}" | cut -d" " -f1)" >> $GITHUB_OUTPUT
+          echo "jar_name=$(basename "${{ steps.build.outputs.jar_path }}")" >> $GITHUB_OUTPUT
 
       - name: Upload JAR to Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            morpheus-tab-security-sustainability/build/libs/*.jar
+            ${{ steps.build.outputs.jar_path }}
+          name: Security & Sustainability Tab ${{ github.ref_name }}
+          body: |
+            ### Security & Sustainability Tab plugin ${{ github.ref_name }}
+
+            - Compatible with Morpheus plugin API 1.2.9 (Java 11)
+            - Adds an Instance tab with cloud-native Security and Sustainability dashboards (AWS, Azure, GCP)
+
+            Install
+            - In Morpheus: Administration → Integrations → Plugins → Upload → select the attached JAR.
+
+            JAR: ${{ steps.sha.outputs.jar_name }}
+            SHA-256: ${{ steps.sha.outputs.sha }}
+
+            Config keys
+            - URL templates: awsSecurityUrlTemplate, awsSustainabilityUrlTemplate, azureSecurityUrlTemplate, azureSustainabilityUrlTemplate, gcpSecurityUrlTemplate, gcpSustainabilityUrlTemplate
+            - Tag overrides: aws:accountId, aws:instanceId, azure:subscriptionId, azure:resourceGroup, azure:vmName, gcp:projectId, gcp:billingAccountId, gcp:instanceName
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
