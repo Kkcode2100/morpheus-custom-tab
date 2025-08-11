@@ -1,8 +1,7 @@
 {
   "name": "Security & Sustainability Tab",
   "plugin": "com.example.morpheus.SecSusPlugin",
-  "version": "1.0.2",
-  "minMorpheusVersion": "8.0.0",
+  "version": "1.0.3",
   "providerTypes": [
     {
       "code": "instanceTab",
