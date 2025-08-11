@@ -48,11 +48,11 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
 
     // Debug: confirm template exists in classpath
     var res = getClass().getClassLoader().getResource("renderer/hbs/addon-url.hbs");
-    log.info("addon-url.hbs resource={}", res);
+    log.info("hbs/addon-url.hbs resource={}", res);
 
     ViewModel<Map<String,Object>> model = new ViewModel<>();
     model.object = vm;
-    return getRenderer().renderTemplate("addon-url", model);
+    return getRenderer().renderTemplate("hbs/addon-url", model);
   }
 
   @Override
