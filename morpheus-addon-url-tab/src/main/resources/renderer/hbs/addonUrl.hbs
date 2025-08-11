@@ -1,0 +1,55 @@
+<div class="addon-url-tab">
+    <h3>Add-on URL</h3>
+    <p class="text-muted mb-3">External cloud provider dashboards and tools for this instance.</p>
+    
+    {{#if buttons.length}}
+        <div class="addon-url-buttons">
+            {{#each buttons}}
+                <a class="btn btn-primary mr-2 mb-2"
+                   href="{{this.url}}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   title="{{this.label}}">
+                    <i class="fa fa-external-link mr-1"></i>
+                    {{this.label}}
+                </a>
+            {{/each}}
+        </div>
+        
+        <div class="mt-3">
+            <small class="text-muted">
+                <i class="fa fa-info-circle mr-1"></i>
+                Links open in new tab/window. Make sure you're logged into the appropriate cloud provider.
+            </small>
+        </div>
+    {{else}}
+        <div class="alert alert-info">
+            <i class="fa fa-info-circle mr-2"></i>
+            No external dashboards configured for this cloud provider.
+        </div>
+    {{/if}}
+</div>
+
+<style>
+.addon-url-tab {
+    padding: 15px;
+}
+
+.addon-url-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.addon-url-buttons .btn {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+}
+
+.addon-url-buttons .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+</style>
