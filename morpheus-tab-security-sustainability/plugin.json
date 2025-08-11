@@ -1,35 +1,17 @@
 {
-  "code": "sec-sus-tab",
-  "name": "Security & Sustainability Tab",
-  "description": "Adds an Instance tab with cloud-native Security and Sustainability dashboards (AWS, Azure, GCP).",
+  "code": "addon-url",
+  "name": "Add-on URL",
   "plugin": "com.example.morpheus.SecSusPlugin",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "minMorpheusVersion": "8.0.0",
-  "providerTypes": [
-    {
-      "code": "instanceTab",
-      "name": "Instance Tab"
-    }
-  ],
   "settings": [
-    { "name": "showIcons", "type": "boolean", "defaultValue": true },
-    { "name": "showResolvedInfo", "type": "boolean", "defaultValue": true },
-
-    { "name": "awsSecurityUrlTemplate", "type": "string", "defaultValue": "https://{region}.console.aws.amazon.com/securityhub/home?region={region}" },
+    { "name": "awsSecurityUrlTemplate",       "type": "string", "defaultValue": "https://{region}.console.aws.amazon.com/securityhub/home?region={region}" },
     { "name": "awsSustainabilityUrlTemplate", "type": "string", "defaultValue": "https://console.aws.amazon.com/billing/home#/carbon" },
 
-    { "name": "azureSecurityUrlTemplate", "type": "string", "defaultValue": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/overview" },
-    { "name": "azureSustainabilityUrlTemplate", "type": "string", "defaultValue": "https://portal.azure.com/#blade/Microsoft_Azure_Sustainability/EmissionsImpactDashboardBlade/Overview" },
+    { "name": "azureSecurityUrlTemplate",     "type": "string", "defaultValue": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/overview" },
+    { "name": "azureSustainabilityUrlTemplate","type": "string", "defaultValue": "https://portal.azure.com/#blade/Microsoft_Azure_Sustainability/EmissionsImpactDashboardBlade/Overview" },
 
-    { "name": "keys.aws.accountId", "type": "string", "defaultValue": "aws:accountId" },
-    { "name": "keys.aws.instanceId", "type": "string", "defaultValue": "aws:instanceId" },
-
-    { "name": "keys.azure.subscriptionId", "type": "string", "defaultValue": "azure:subscriptionId" },
-    { "name": "keys.azure.resourceGroup", "type": "string", "defaultValue": "azure:resourceGroup" },
-    { "name": "keys.azure.vmName", "type": "string", "defaultValue": "azure:vmName" },
-
-    { "name": "keys.gcp.projectId", "type": "string", "defaultValue": "gcp:projectId" },
-    { "name": "keys.gcp.billingAccountId", "type": "string", "defaultValue": "gcp:billingAccountId" },
-    { "name": "keys.gcp.instanceName", "type": "string", "defaultValue": "gcp:instanceName" }
+    { "name": "gcpSecurityUrlTemplate",       "type": "string", "defaultValue": "https://console.cloud.google.com/security/command-center/findings?project={projectId}&organizationId={orgId}" },
+    { "name": "gcpSustainabilityUrlTemplate", "type": "string", "defaultValue": "https://console.cloud.google.com/billing/{billingAccountId}/carbonfootprint?project={projectId}" }
   ]
 }

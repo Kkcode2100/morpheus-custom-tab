@@ -17,7 +17,7 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
   protected Plugin plugin;
   protected MorpheusContext morpheus;
 
-  protected String code = "sec-sus-instance-tab";
+  protected String code = "addon-url-instance-tab-v3";
   protected String name = "Add-on URL";
 
   public SecSusTabProvider(Plugin plugin, MorpheusContext context) {
@@ -39,9 +39,8 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
 
   @Override
   public HTMLResponse renderTemplate(Instance instance) {
-    ViewModel<Instance> model = new ViewModel<>();
-    model.object = instance;
-    return getRenderer().renderTemplate("views/sec-sus.html", model);
+    ViewModel<Object> model = new ViewModel<>();
+    return getRenderer().renderTemplate("addon-url", model);
   }
 
   @Override

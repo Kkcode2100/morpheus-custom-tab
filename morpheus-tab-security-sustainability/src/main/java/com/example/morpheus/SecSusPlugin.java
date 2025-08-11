@@ -14,18 +14,18 @@ public class SecSusPlugin extends Plugin {
   private static final Logger log = LoggerFactory.getLogger(SecSusPlugin.class);
 
   @Override
-  public String getCode() { return "sec-sus-tab"; }
+  public String getCode() { return "addon-url-plugin-v3"; }
 
   @Override
-  public String getName() { return "Security & Sustainability Tab"; }
+  public String getName() { return "Add-on URL"; }
 
   @Override
   public void initialize() {
     MorpheusContext morpheus = this.morpheus;
-    SecSusTabProvider tabProvider = new SecSusTabProvider(this, morpheus);
-    this.registerProvider(tabProvider);
-    this.setRenderer(new HandlebarsRenderer(this.getClass().getClassLoader()));
-    log.info("SecSusPlugin initialized");
+    this.setRenderer(new HandlebarsRenderer(SecSusPlugin.class.getClassLoader()));
+    SecSusTabProvider tab = new SecSusTabProvider(this, morpheus);
+    this.pluginProviders.put(tab.getCode(), tab);
+    log.info("Registered provider code={} (INSTANCE_TAB)", tab.getCode());
   }
 
   @Override
@@ -35,7 +35,7 @@ public class SecSusPlugin extends Plugin {
 
   @Override
   public List<Permission> getPermissions() {
-    Permission permission = new Permission("Security & Sustainability Tab", "secSusTab", Collections.singletonList(Permission.AccessType.full));
+    Permission permission = new Permission("Add-on URL", Collections.singletonList(Permission.AccessType.full));
     return Collections.singletonList(permission);
   }
 }
