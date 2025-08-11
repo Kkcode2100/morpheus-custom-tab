@@ -42,21 +42,11 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
     try {
       ViewModel<Instance> model = new ViewModel<>();
       model.object = instance;
-      HTMLResponse resp = getRenderer().renderTemplate("views/sec-sus.html", model);
-      if (resp == null || resp.getContent() == null || resp.getContent().trim().isEmpty()) {
-        return HTMLResponse.success("<div class=\"sec-sus-tab\"><h2>" + name + "</h2><p>Loaded.</p></div>");
-      }
-      return resp;
+      return getRenderer().renderTemplate("views/sec-sus.html", model);
     } catch (Exception ex) {
       log.warn("Failed to render sec-sus template, falling back: {}", ex.getMessage());
-      return HTMLResponse.success("<div class=\"sec-sus-tab\"><h2>" + name + "</h2><p>Loaded.</p></div>");
+      return HTMLResponse.success("<div class=\"sec-sus-tab\"><h2>" + name + "</h2></div>");
     }
-  }
-
-  // For API 1.2.8, implement render that includes user/account
-  @Override
-  public HTMLResponse render(Instance instance, User user, Account account) {
-    return renderTemplate(instance);
   }
 
   @Override
