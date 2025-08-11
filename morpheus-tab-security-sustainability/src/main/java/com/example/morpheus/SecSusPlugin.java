@@ -23,7 +23,7 @@ public class SecSusPlugin extends Plugin {
   public void initialize() {
     MorpheusContext morpheus = this.morpheus;
     SecSusTabProvider tabProvider = new SecSusTabProvider(this, morpheus);
-    this.pluginProviders.put(tabProvider.code, tabProvider);
+    this.registerProvider(tabProvider);
     this.setRenderer(new HandlebarsRenderer(this.getClass().getClassLoader()));
     log.info("SecSusPlugin initialized");
   }

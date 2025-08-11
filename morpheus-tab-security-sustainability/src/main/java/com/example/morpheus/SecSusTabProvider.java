@@ -44,6 +44,12 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
     return getRenderer().renderTemplate("views/sec-sus.html", model);
   }
 
+  // For API 1.2.8, implement render that includes user/account
+  @Override
+  public HTMLResponse render(Instance instance, User user, Account account) {
+    return renderTemplate(instance);
+  }
+
   @Override
   public Boolean show(Instance instance, User user, Account account) {
     return true;
