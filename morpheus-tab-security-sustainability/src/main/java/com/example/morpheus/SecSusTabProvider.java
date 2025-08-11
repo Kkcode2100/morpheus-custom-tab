@@ -46,9 +46,9 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
     Map<String,Object> vm = new HashMap<>();
     vm.put("links", List.of(Map.of("label","Test Link","href","https://example.com")));
 
-    // Debug: confirm template exists in classpath
-    var res = getClass().getClassLoader().getResource("renderer/hbs/addon-url.hbs");
-    log.info("addon-url.hbs resource={}", res);
+    // Debug: check both lookup locations
+    log.info("addon-url.hbs resource (renderer/hbs)={}", getClass().getClassLoader().getResource("renderer/hbs/addon-url.hbs"));
+    log.info("addon-url.hbs resource (hbs)={}", getClass().getClassLoader().getResource("hbs/addon-url.hbs"));
 
     ViewModel<Map<String,Object>> model = new ViewModel<>();
     model.object = vm;
