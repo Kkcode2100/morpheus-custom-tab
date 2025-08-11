@@ -1,0 +1,25 @@
+<div class="addon-url-tab addon-url-empty">
+    <h3>Add-on URL</h3>
+    
+    <div class="alert alert-warning">
+        <i class="fa fa-exclamation-triangle mr-2"></i>
+        {{#if message}}
+            {{message}}
+        {{else}}
+            Add-on URLs are not configured for this instance.
+        {{/if}}
+    </div>
+    
+    <div class="mt-3">
+        <small class="text-muted">
+            <i class="fa fa-cog mr-1"></i>
+            Contact your system administrator to configure cloud provider URLs for this plugin.
+        </small>
+    </div>
+</div>
+
+<style>
+.addon-url-empty {
+    padding: 15px;
+}
+</style>
