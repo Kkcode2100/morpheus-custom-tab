@@ -39,6 +39,7 @@
       data.projectId = tags[settings['keys.gcp.projectId'] || 'gcp:projectId'] || '';
       data.billingAccountId = tags[settings['keys.gcp.billingAccountId'] || 'gcp:billingAccountId'] || '';
       data.instanceName = tags[settings['keys.gcp.instanceName'] || 'gcp:instanceName'] || instanceName || '';
+      data.orgId = tags[settings['keys.gcp.orgId'] || 'gcp:orgId'] || '';
     }
 
     return data;
@@ -58,6 +59,7 @@
     if(!el) return;
     el.disabled = !enabled;
     if(tooltip) el.setAttribute('title', tooltip); else el.removeAttribute('title');
+    el.onclick = null; // Clear any existing handlers
     if(enabled && url) {
       el.addEventListener('click', function(){ window.open(url, '_blank', 'noopener'); });
     }
@@ -65,13 +67,16 @@
   function populateInfo(ids) {
     var tbody = document.querySelector('#secSusInfoTable tbody');
     if(!tbody) return;
-    tbody.innerHTML = '';
-    var keys = ['provider','region','zone','accountId','instanceId','subscriptionId','resourceGroup','vmName','resourceId','projectId','billingAccountId','instanceName'];
+    
+    // Add to existing content rather than replacing it
+    var keys = ['provider','region','zone','accountId','instanceId','subscriptionId','resourceGroup','vmName','resourceId','projectId','billingAccountId','instanceName','orgId'];
     keys.forEach(function(k){
-      var tr = document.createElement('tr');
-      var td1 = document.createElement('td'); td1.textContent = k;
-      var td2 = document.createElement('td'); td2.textContent = ids[k] || '';
-      tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr);
+      if(ids[k] && ids[k] !== '') {
+        var tr = document.createElement('tr');
+        var td1 = document.createElement('td'); td1.textContent = k;
+        var td2 = document.createElement('td'); td2.textContent = ids[k] || '';
+        tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr);
+      }
     });
   }
 

@@ -45,11 +45,16 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
   public HTMLResponse renderTemplate(Instance instance) {
     Map<String,Object> vm = new HashMap<>();
     
-    // Pass instance data to the template for JavaScript access
-    vm.put("instance", instance);
-    
-    // Plugin settings will be automatically available via window.morpheus.pluginSettings
-    // No need to manually pass them here as they're handled by the Morpheus framework
+    try {
+      // Pass instance data to the template - let JavaScript handle all the logic
+      vm.put("instance", instance);
+      
+      log.info("SecSusTab: Rendering for instance={}", instance != null ? instance.getName() : "null");
+      
+    } catch (Exception e) {
+      log.error("Error preparing SecuritySustainability tab data", e);
+      vm.put("error", "Error loading dashboard data: " + e.getMessage());
+    }
     
     ViewModel<Map<String,Object>> model = new ViewModel<>();
     model.object = vm;
