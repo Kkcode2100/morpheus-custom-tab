@@ -41,7 +41,7 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
   public HTMLResponse renderTemplate(Instance instance) {
     ViewModel<Instance> model = new ViewModel<>();
     model.object = instance;
-    return getRenderer().renderTemplate("sec-sus", model);
+    return getRenderer().renderTemplate("views/sec-sus.html", model);
   }
 
   @Override
