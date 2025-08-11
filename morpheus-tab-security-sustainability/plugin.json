@@ -3,7 +3,7 @@
   "name": "Security & Sustainability Tab",
   "description": "Adds an Instance tab with cloud-native Security and Sustainability dashboards (AWS, Azure, GCP).",
   "plugin": "com.example.morpheus.SecSusPlugin",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "minMorpheusVersion": "8.0.0",
   "providerTypes": [
     {

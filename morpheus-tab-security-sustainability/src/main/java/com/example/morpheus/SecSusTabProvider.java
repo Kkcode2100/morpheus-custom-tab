@@ -17,7 +17,7 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
   protected Plugin plugin;
   protected MorpheusContext morpheus;
 
-  protected String code = "sec-sus-tab";
+  protected String code = "sec-sus-instance-tab";
   protected String name = "Security & Sustainability";
 
   public SecSusTabProvider(Plugin plugin, MorpheusContext context) {
@@ -39,14 +39,9 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
 
   @Override
   public HTMLResponse renderTemplate(Instance instance) {
-    try {
-      ViewModel<Instance> model = new ViewModel<>();
-      model.object = instance;
-      return getRenderer().renderTemplate("views/sec-sus.html", model);
-    } catch (Exception ex) {
-      log.warn("Failed to render sec-sus template, falling back: {}", ex.getMessage());
-      return HTMLResponse.success("<div class=\"sec-sus-tab\"><h2>" + name + "</h2></div>");
-    }
+    ViewModel<Instance> model = new ViewModel<>();
+    model.object = instance;
+    return getRenderer().renderTemplate("sec-sus", model);
   }
 
   @Override
