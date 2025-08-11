@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.example.morpheus'
-version = '1.0.7'
+version = '1.0.8'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -21,18 +21,16 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
 }
 
-jar {
+// Ensure plugin.json is included in the resources output
+tasks.named('processResources') {
     from("${projectDir}/plugin.json") {
         into ''
     }
 }
 
+// Publish shaded JAR
 shadowJar {
     archiveClassifier.set('all')
-    from("${projectDir}/plugin.json") {
-        into ''
-    }
 }
 
-// Ensure the shaded JAR is produced during build
 build.dependsOn shadowJar
