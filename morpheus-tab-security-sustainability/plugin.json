@@ -1,7 +1,7 @@
 {
   "name": "Security & Sustainability Tab",
   "plugin": "com.example.morpheus.SecSusPlugin",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "providerTypes": [
     {
       "code": "instanceTab",
@@ -24,7 +24,7 @@
     { "name": "keys.aws.accountId", "type": "string", "defaultValue": "aws:accountId" },
     { "name": "keys.aws.instanceId", "type": "string", "defaultValue": "aws:instanceId" },
 
-    { "name": "keys.azure.subscriptionId", "type": "string", "defaultValue": "azure:subscriptionId" },
+    { "name": "keys.azure subscriptionId", "type": "string", "defaultValue": "azure:subscriptionId" },
     { "name": "keys.azure.resourceGroup", "type": "string", "defaultValue": "azure:resourceGroup" },
     { "name": "keys.azure.vmName", "type": "string", "defaultValue": "azure:vmName" },
 
