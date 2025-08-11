@@ -6,7 +6,6 @@ import com.morpheusdata.core.Plugin;
 import com.morpheusdata.model.Account;
 import com.morpheusdata.model.Instance;
 import com.morpheusdata.model.User;
-import com.morpheusdata.model.Cloud;
 import com.morpheusdata.views.HTMLResponse;
 import com.morpheusdata.views.ViewModel;
 import org.slf4j.Logger;
@@ -19,7 +18,7 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
   protected MorpheusContext morpheus;
 
   protected String code = "sec-sus-instance-tab";
-  protected String name = "Security & Sustainability";
+  protected String name = "Add-on URL";
 
   public SecSusTabProvider(Plugin plugin, MorpheusContext context) {
     this.plugin = plugin;
@@ -47,14 +46,6 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
 
   @Override
   public Boolean show(Instance instance, User user, Account account) {
-    try {
-      Cloud cloud = instance != null ? instance.getCloud() : null;
-      String provider = cloud != null ? String.valueOf(cloud.getProviderCode()).toLowerCase() : "";
-      return provider.contains("amazon") || provider.contains("aws") ||
-             provider.contains("azure") || provider.contains("arm") ||
-             provider.contains("google") || provider.contains("gcp");
-    } catch (Exception e) {
-      return false;
-    }
+    return true;
   }
 }
