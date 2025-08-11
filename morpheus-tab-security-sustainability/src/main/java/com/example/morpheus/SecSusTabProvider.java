@@ -44,12 +44,13 @@ public class SecSusTabProvider extends AbstractInstanceTabProvider {
   @Override
   public HTMLResponse renderTemplate(Instance instance) {
     Map<String,Object> vm = new HashMap<>();
-    vm.put("links", List.of(Map.of("label","Test Link","href","https://example.com")));
-
-    // Debug: confirm template exists in classpath
-    var res = getClass().getClassLoader().getResource("renderer/hbs/addon-url.hbs");
-    log.info("hbs/addon-url.hbs resource={}", res);
-
+    
+    // Pass instance data to the template for JavaScript access
+    vm.put("instance", instance);
+    
+    // Plugin settings will be automatically available via window.morpheus.pluginSettings
+    // No need to manually pass them here as they're handled by the Morpheus framework
+    
     ViewModel<Map<String,Object>> model = new ViewModel<>();
     model.object = vm;
     return getRenderer().renderTemplate("hbs/addon-url", model);

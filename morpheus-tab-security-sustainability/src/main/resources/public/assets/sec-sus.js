@@ -80,13 +80,21 @@
     var instance = getInstanceContext();
     var provider = detectProvider(instance);
     var ids = resolveIdentifiers(instance, settings, provider);
+    
+    // Debug logging to help troubleshoot
+    console.log('Security & Sustainability Tab Debug:', {
+      provider: provider,
+      instance: instance,
+      settings: settings,
+      resolvedIds: ids
+    });
 
     var awsSecTpl = settings.awsSecurityUrlTemplate || 'https://{region}.console.aws.amazon.com/securityhub/home?region={region}';
     var awsSusTpl = settings.awsSustainabilityUrlTemplate || 'https://console.aws.amazon.com/billing/home#/carbon';
     var azSecTpl = settings.azureSecurityUrlTemplate || 'https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/overview';
     var azSusTpl = settings.azureSustainabilityUrlTemplate || 'https://portal.azure.com/#blade/Microsoft_Azure_Sustainability/EmissionsImpactDashboardBlade/Overview';
-    var gcpSecTpl = settings.gcpSecurityUrlTemplate || 'https://console.cloud.google.com/security/command-center?project={projectId}';
-    var gcpSusTpl = settings.gcpSustainabilityUrlTemplate || 'https://console.cloud.google.com/billing/{billingAccountId}/carbonfootprint';
+    var gcpSecTpl = settings.gcpSecurityUrlTemplate || 'https://console.cloud.google.com/security/command-center/findings?project={projectId}&organizationId={orgId}';
+    var gcpSusTpl = settings.gcpSustainabilityUrlTemplate || 'https://console.cloud.google.com/billing/{billingAccountId}/carbonfootprint?project={projectId}';
 
     var securityUrl = '';
     var sustainUrl = '';
