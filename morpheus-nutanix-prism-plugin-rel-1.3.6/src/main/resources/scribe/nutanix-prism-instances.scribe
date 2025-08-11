@@ -1,0 +1,80 @@
+resource "instance-type" "nutanix-prism-provision-provider" {
+	name = "Nutanix Prism Central"
+	code = "nutanix-prism-provision-provider"
+	description = "Spin up any VM Image on Nutanix Prism Central infrastructure."
+	environmentPrefix = "NUTANIX_PRISM"
+	category = "cloud"
+	active = true
+	enabled = true
+	hasConfig = false
+	hasSettings = false
+	hasDeployment = false
+	hasAutoScale = true
+	versions = ["1.0"]
+	optionTypes = [
+		option-type.nutanix-prism-provision-image
+	]
+	provisionTypeDefault = true
+	pluginIconPath = "nutanix-prism.svg"
+	pluginIconHidpiPath= "nutanix-prism.svg"
+	pluginIconDarkPath = "nutanix-prism-dark.svg"
+	pluginIconDarkHidpiPath = "nutanix-prism-dark.svg"
+}
+
+resource "workload-type" "nutanix-prism-provision-provider-1_0" {
+	code = "nutanix-prism-provision-provider-1.0"
+	shortName = "nutanix-prism-central"
+	name = "Nutanix Prism Central"
+	account = null
+	account = null
+	ports = []
+	containerVersion = "1.0"
+	serverType = "vm"
+	showServerLogs = true
+	statTypeCode = "vm"
+	logTypeCode = "nutanix-prism-central"
+	category = "cloud"
+	provisionType = "nutanix-prism-provision-provider"
+	backupType = "nutanixPrismSnapshot"
+	actions = [{code = "generic-remove-node"}]
+}
+
+resource "workload-type-set" "nutanix-prism-1_0-set" {
+	code = "nutanix-prism-1.0-set"
+	workloadType = workload-type.nutanix-prism-provision-provider-1_0
+	priorityOrder = 0
+	dynamicCount = true
+	containerCount = 1
+}
+
+resource "instance-type-layout" "nutanix-prism-1_0-single" {
+ 	code = "nutanix-prism-1.0-single"
+	name = "Nutanix Prism Central VM"
+	account = null
+	sortOrder = 0
+	instanceVersion = "1.0"
+	description = "This will provision a single vm"
+	instanceType = instance-type.nutanix-prism-provision-provider
+	serverCount = 1
+	portCount = 0
+	enabled = true
+	creatable = true
+	workloads = [
+		workload-type-set.nutanix-prism-1_0-set
+	]
+	actions = [{code = "generic-add-node"}]
+	provisionType = "nutanix-prism-provision-provider"
+	optionTypes = []
+}
+
+resource "scale-action" "nutanix-prism-1_0-single" {
+	code = "nutanix-prism-1_0-single"
+	scaleType = "action"
+	layout = instance-type-layout.nutanix-prism-1_0-single
+	upAction {
+		code = "generic-add-node"
+	}
+	downAction {
+		code = "generic-remove-node"
+	}
+}

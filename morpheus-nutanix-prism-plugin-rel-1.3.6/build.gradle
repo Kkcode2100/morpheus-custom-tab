@@ -1,0 +1,132 @@
+buildscript {
+	repositories {
+		mavenLocal()
+		mavenCentral()
+		maven { url "https://plugins.gradle.org/m2/" }
+		maven { url "https://nexus.bertramlabs.com/content/repositories/snapshots" }
+		maven { url "https://nexus.bertramlabs.com/content/repositories/releases" }
+		maven { url "https://nexus.bertramlabs.com/content/repositories/publicReleases" }
+	}
+	dependencies {
+		classpath "com.github.jengelman.gradle.plugins:shadow:6.0.0"
+		classpath "io.github.gradle-nexus:publish-plugin:1.0.0"
+		classpath "com.bertramlabs.plugins:asset-pipeline-gradle:$assetPipelineVersion"
+		classpath "com.morpheusdata:morpheus-plugin-gradle:0.14.3"
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'asset-pipeline'
+apply plugin: 'com.morpheusdata.morpheus-plugin-gradle'
+	
+group = 'com.morpheusdata'
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+repositories {
+	mavenLocal()
+	jcenter()
+	mavenCentral()
+	maven { url "https://nexus.bertramlabs.com/content/repositories/snapshots" }
+	maven { url "https://nexus.bertramlabs.com/content/repositories/releases" }
+	maven { url "https://nexus.bertramlabs.com/content/repositories/publicReleases" }
+}
+
+configurations {
+	provided
+}
+
+dependencies {
+	provided "com.morpheusdata:morpheus-plugin-api:$morphPluginApiVersion"
+	provided "org.codehaus.groovy:groovy-all:$groovyVersion"
+	implementation "org.slf4j:slf4j-api:$slf4jVersion"
+	implementation "org.slf4j:slf4j-parent:$slf4jVersion"
+	implementation 'org.apache.httpcomponents:httpclient:4.5.3'
+	implementation 'org.apache.httpcomponents:httpcore:4.4.5'
+
+	provided("com.bertramlabs.plugins:karman-core:${karmanVersion}") {
+		exclude module: 'groovy-all'
+	}
+
+	implementation 'commons-beanutils:commons-beanutils:1.9.3'
+	implementation "org.slf4j:slf4j-api:$slf4jVersion"
+	implementation "org.slf4j:slf4j-parent:$slf4jVersion"
+	implementation 'commons-net:commons-net:3.6'
+
+	// Include morpheus-core and it's dependencies
+	testImplementation "com.morpheusdata:morpheus-plugin-api:$morphPluginApiVersion"
+	testImplementation 'io.reactivex.rxjava3:rxjava:3.1.8'
+	testImplementation 'org.apache.httpcomponents:httpclient:4.5.3'
+	testImplementation 'org.apache.httpcomponents:httpcore:4.4.5'
+	testImplementation "org.slf4j:slf4j-parent:$slf4jVersion"
+
+	testImplementation "org.codehaus.groovy:groovy-all:$groovyVersion"
+	testImplementation 'net.bytebuddy:byte-buddy:1.9.3'
+	testImplementation 'org.objenesis:objenesis:2.6'
+	testImplementation "org.spockframework:spock-core:$spockVersion"
+	testImplementation 'cglib:cglib-nodep:3.2.12'
+}
+
+sourceSets {
+	main {
+		compileClasspath += configurations.provided
+	}
+}
+
+jar {
+	manifest {
+		attributes(
+				'Plugin-Class': 'com.morpheusdata.nutanix.prism.plugin.NutanixPrismPlugin',
+				'Plugin-Version': version,
+				'Morpheus-Name': 'Nutanix Prism Central',
+				'Morpheus-Organization': 'morpheus',
+				'Morpheus-Code': 'morpheus-nutanix-prism',
+				'Morpheus-Description': 'Plugin for Nutanix Prism Central',
+				'Morpheus-Logo': 'assets/nutanix-prism.svg',
+				'Morpheus-Logo-Dark': 'assets/nutanix-prism-dark.svg',
+				'Morpheus-Color': '#ffffff',
+				'Morpheus-Labels': 'Plugin, Cloud',
+				'Morpheus-Repo': 'https://github.com/gomorpheus/morpheus-nutanix-prism-plugin',
+				'Morpheus-Min-Appliance-Version': minVersion
+		)
+	}
+}
+
+task(console, dependsOn: 'classes', type: JavaExec) {
+	main = 'groovy.ui.Console'
+	classpath = sourceSets.main.runtimeClasspath
+}
+
+test {
+	testLogging {
+		exceptionFormat = 'full'
+		showStandardStreams = true
+	}
+}
+
+shadowJar {
+	// archiveFileName = "${baseName}-${version}.mpl"
+}
+
+tasks.assemble.dependsOn tasks.shadowJar
+
+task copyRuntimeLibs(type: Copy) {
+	into "lib"
+	from project.configurations.runtimeClasspath - project.configurations.provided
+}
+
+tasks.register('moveToPlugin') {
+	doLast {
+		ant.move file: "${buildDir}/libs/${project.name}-${version}-all.jar",
+			todir: "../morpheus-plugins"
+	}
+}
+
+// Runs assemble and copyToMorpheus
+tasks.register('publishToMorpheus') {
+	dependsOn tasks.shadowJar
+	dependsOn 'moveToPlugin'
+	tasks.findByName('moveToPlugin').mustRunAfter 'shadowJar'
+}
