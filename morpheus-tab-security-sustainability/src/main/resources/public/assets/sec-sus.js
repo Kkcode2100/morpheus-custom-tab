@@ -6,24 +6,61 @@
     try { return (window.morpheus && window.morpheus.instance) || {}; } catch(e) { return {}; }
   }
   function detectProvider(instance) {
+    console.log('SecSus: Detecting provider for instance:', instance);
+    
+    // Try multiple detection methods
+    var detectionMethods = [];
+    
+    // Method 1: Check cloud object
     var cloud = instance && (instance.cloud || instance.site || {});
-    var code = cloud.providerCode || cloud.cloudProvider || cloud.code || '';
+    var code = cloud.providerCode || cloud.cloudProvider || cloud.code || cloud.name || '';
+    detectionMethods.push('cloud.code: ' + code);
+    
+    // Method 2: Check instance type or provision type
+    var instanceType = instance && (instance.instanceTypeCode || instance.provisionType || '');
+    detectionMethods.push('instanceType: ' + instanceType);
+    
+    // Method 3: Check for GCP-specific properties
+    var hasGcpProps = instance && (
+      (instance.externalId && instance.externalId.toString().includes('google')) ||
+      (instance.name && instance.name.toLowerCase().includes('google')) ||
+      (instance.hostname && instance.hostname.includes('gcp'))
+    );
+    detectionMethods.push('hasGcpProps: ' + hasGcpProps);
+    
+    console.log('SecSus: Detection methods:', detectionMethods);
+    
     code = (code || '').toLowerCase();
-    if(code.indexOf('amazon') >= 0 || code.indexOf('aws') >= 0) return 'aws';
-    if(code.indexOf('azure') >= 0 || code.indexOf('arm') >= 0) return 'azure';
-    if(code.indexOf('google') >= 0 || code.indexOf('gcp') >= 0) return 'gcp';
+    instanceType = (instanceType || '').toLowerCase();
+    
+    if(code.indexOf('amazon') >= 0 || code.indexOf('aws') >= 0 || instanceType.indexOf('aws') >= 0) return 'aws';
+    if(code.indexOf('azure') >= 0 || code.indexOf('arm') >= 0 || instanceType.indexOf('azure') >= 0) return 'azure';
+    if(code.indexOf('google') >= 0 || code.indexOf('gcp') >= 0 || instanceType.indexOf('google') >= 0 || hasGcpProps) return 'gcp';
+    
+    // Additional detection based on instance name patterns
+    var name = (instance && instance.name || '').toLowerCase();
+    if(name.includes('google') || name.includes('gcp')) return 'gcp';
+    if(name.includes('aws') || name.includes('amazon')) return 'aws';
+    if(name.includes('azure')) return 'azure';
+    
+    console.log('SecSus: No provider detected, defaulting to empty');
     return '';
   }
   function read(obj, path) {
     try { return path.split('.').reduce(function(a,k){ return (a||{})[k]; }, obj); } catch(e){ return undefined; }
   }
   function resolveIdentifiers(instance, settings, provider) {
+    console.log('SecSus: Resolving identifiers for provider:', provider, 'instance:', instance);
+    
     var tags = instance && (instance.tags || instance.metadata || {});
     var region = instance && (instance.region && instance.region.code) || instance.region || read(instance,'cloud.regionCode') || read(instance,'cloud.region') || '';
     var zone = read(instance,'zone.name') || read(instance,'zone') || '';
     var instanceId = instance && (instance.externalId || instance.id || '');
     var instanceName = instance && (instance.name || '');
     var cloud = instance && instance.cloud || {};
+
+    console.log('SecSus: Raw tags/metadata:', tags);
+    console.log('SecSus: Region/zone:', {region: region, zone: zone});
 
     var data = { provider: provider, region: region, zone: zone, instanceId: instanceId, instanceName: instanceName };
 
@@ -40,33 +77,71 @@
       data.billingAccountId = tags[settings['keys.gcp.billingAccountId'] || 'gcp:billingAccountId'] || '';
       data.instanceName = tags[settings['keys.gcp.instanceName'] || 'gcp:instanceName'] || instanceName || '';
       data.orgId = tags[settings['keys.gcp.orgId'] || 'gcp:orgId'] || '';
+      
+      // If no tags found, try to extract from other properties
+      if(!data.projectId && !data.billingAccountId) {
+        // Try to extract project ID from zone or region
+        if(zone && zone.includes('-')) {
+          var zoneParts = zone.split('-');
+          if(zoneParts.length >= 2) {
+            data.projectId = 'extracted-from-zone'; // Placeholder for manual configuration
+          }
+        }
+        
+        // Try to extract from instance external ID or other properties  
+        if(instanceId && instanceId.includes('google')) {
+          data.projectId = 'extracted-from-id'; // Placeholder for manual configuration
+        }
+      }
     }
 
+    console.log('SecSus: Resolved identifiers:', data);
     return data;
   }
   function interpolate(template, ids) {
     if(!template) return '';
-    return template.replace(/\{(.*?)\}/g, function(_, key){ return ids[key] || ''; });
+    var result = template.replace(/\{(.*?)\}/g, function(_, key){ return ids[key] || ''; });
+    console.log('SecSus: Interpolated template:', template, '->', result);
+    return result;
   }
   function requiredOk(provider, ids) {
-    if(provider === 'aws') return !!ids.region;
-    if(provider === 'azure') return true;
-    if(provider === 'gcp') return !!ids.projectId || !!ids.billingAccountId;
-    return false;
+    var result = false;
+    if(provider === 'aws') result = !!ids.region;
+    if(provider === 'azure') result = true;
+    if(provider === 'gcp') result = !!ids.projectId || !!ids.billingAccountId;
+    
+    console.log('SecSus: Required check for', provider, ':', result, 'ids:', ids);
+    return result;
   }
   function setButton(id, url, enabled, tooltip) {
     var el = document.getElementById(id);
-    if(!el) return;
+    if(!el) {
+      console.log('SecSus: Button not found:', id);
+      return;
+    }
+    
+    console.log('SecSus: Setting button', id, 'enabled:', enabled, 'url:', url, 'tooltip:', tooltip);
+    
     el.disabled = !enabled;
     if(tooltip) el.setAttribute('title', tooltip); else el.removeAttribute('title');
     el.onclick = null; // Clear any existing handlers
     if(enabled && url) {
-      el.addEventListener('click', function(){ window.open(url, '_blank', 'noopener'); });
+      el.addEventListener('click', function(){ 
+        console.log('SecSus: Opening URL:', url);
+        window.open(url, '_blank', 'noopener'); 
+      });
+      // Visual indication that button is clickable
+      el.style.cursor = 'pointer';
+    } else {
+      el.style.cursor = 'not-allowed';
     }
   }
   function populateInfo(ids) {
     var tbody = document.querySelector('#secSusInfoTable tbody');
-    if(!tbody) return;
+    if(!tbody) {
+      console.log('SecSus: Info table tbody not found');
+      return;
+    }
     
     // Add to existing content rather than replacing it
     var keys = ['provider','region','zone','accountId','instanceId','subscriptionId','resourceGroup','vmName','resourceId','projectId','billingAccountId','instanceName','orgId'];
@@ -78,21 +153,31 @@
         tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr);
       }
     });
+    
+    console.log('SecSus: Populated info table with', Object.keys(ids).length, 'entries');
   }
 
   function init() {
+    console.log('SecSus: Initializing Security & Sustainability Tab');
+    console.log('SecSus: Current URL:', window.location.href);
+    console.log('SecSus: Morpheus object:', window.morpheus);
+    
     var settings = getPluginSettings();
     var instance = getInstanceContext();
+    
+    console.log('SecSus: Plugin settings:', settings);
+    console.log('SecSus: Instance context:', instance);
+    
     var provider = detectProvider(instance);
     var ids = resolveIdentifiers(instance, settings, provider);
     
-    // Debug logging to help troubleshoot
-    console.log('Security & Sustainability Tab Debug:', {
-      provider: provider,
-      instance: instance,
-      settings: settings,
-      resolvedIds: ids
-    });
+    // Enhanced debug logging
+    console.log('=== Security & Sustainability Tab Debug ===');
+    console.log('Provider detected:', provider);
+    console.log('Instance object:', instance);
+    console.log('Plugin settings:', settings);
+    console.log('Resolved identifiers:', ids);
+    console.log('===========================================');
 
     var awsSecTpl = settings.awsSecurityUrlTemplate || 'https://{region}.console.aws.amazon.com/securityhub/home?region={region}';
     var awsSusTpl = settings.awsSustainabilityUrlTemplate || 'https://console.aws.amazon.com/billing/home#/carbon';
@@ -108,10 +193,21 @@
     if(provider === 'gcp') { securityUrl = interpolate(gcpSecTpl, ids); sustainUrl = interpolate(gcpSusTpl, ids); }
 
     var ok = requiredOk(provider, ids);
+    
+    console.log('SecSus: Final URLs - Security:', securityUrl, 'Sustainability:', sustainUrl);
+    console.log('SecSus: Requirements OK:', ok);
+    
     setButton('secSusSecurityBtn', securityUrl, ok && !!securityUrl, ok ? '' : 'Missing required identifiers for '+provider);
     setButton('secSusSustainabilityBtn', sustainUrl, ok && !!sustainUrl, ok ? '' : 'Missing required identifiers for '+provider);
 
     if(settings.showResolvedInfo !== false) populateInfo(ids);
+    
+    // Add troubleshooting message if nothing was detected
+    if(!provider || (!ok && provider)) {
+      console.warn('SecSus: TROUBLESHOOTING - No provider detected or missing identifiers');
+      console.warn('SecSus: For GCP instances, ensure tags exist: gcp:projectId, gcp:billingAccountId');
+      console.warn('SecSus: Instance object structure:', JSON.stringify(instance, null, 2));
+    }
   }
 
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
