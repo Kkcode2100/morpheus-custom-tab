@@ -23,11 +23,11 @@ jobs:
           cache: 'gradle'
 
       - name: Grant execute permission for Gradle wrapper
-        run: chmod +x morpheus-tab-security-sustainability/gradlew
+        run: chmod +x morpheus-custom-tab/gradlew
 
       - name: Build plugin JAR
         id: build
-        working-directory: morpheus-tab-security-sustainability
+        working-directory: morpheus-custom-tab
         run: |
           ./gradlew clean build --no-daemon --stacktrace
           echo "jar_path=$(ls -1 build/libs/*.jar | head -n1)" >> $GITHUB_OUTPUT
@@ -42,13 +42,13 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            morpheus-tab-security-sustainability/build/libs/*-all.jar
-          name: Security & Sustainability Tab ${{ github.ref_name }}
+            morpheus-custom-tab/build/libs/*.jar
+          name: Custom Tab Plugin ${{ github.ref_name }}
           body: |
-            ### Security & Sustainability Tab plugin ${{ github.ref_name }}
+            ### Custom Tab Plugin ${{ github.ref_name }}
 
-            - Compatible with Morpheus plugin API 1.2.8 (Java 11)
-            - Adds an Instance tab with cloud-native Security and Sustainability dashboards (AWS, Azure, GCP)
+            - Compatible with Morpheus plugin API 1.2.7 (Java 11)
+            - Custom tab plugin for Morpheus
 
             Install
             - In Morpheus: Administration → Integrations → Plugins → Upload → select the attached JAR.
@@ -56,8 +56,6 @@ jobs:
             JAR: ${{ steps.sha.outputs.jar_name }}
             SHA-256: ${{ steps.sha.outputs.sha }}
 
-            Config keys
-            - URL templates: awsSecurityUrlTemplate, awsSustainabilityUrlTemplate, azureSecurityUrlTemplate, azureSustainabilityUrlTemplate, gcpSecurityUrlTemplate, gcpSustainabilityUrlTemplate
-            - Tag overrides: aws:accountId, aws:instanceId, azure:subscriptionId, azure:resourceGroup, azure:vmName, gcp:projectId, gcp:billingAccountId, gcp:instanceName
+            Contains both regular JAR and shadow JAR with all dependencies (-all.jar)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
