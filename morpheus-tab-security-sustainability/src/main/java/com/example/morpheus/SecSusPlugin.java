@@ -20,8 +20,8 @@ public class SecSusPlugin extends Plugin {
   public String getName() { return "Add-on URL"; }
 
   @Override
-  public void initialize() {
-    MorpheusContext morpheus = this.morpheus;
+  public void initialize(MorpheusContext morpheus) {
+    this.morpheus = morpheus;
     this.setRenderer(new HandlebarsRenderer(SecSusPlugin.class.getClassLoader()));
     SecSusTabProvider tab = new SecSusTabProvider(this, morpheus);
     this.pluginProviders.put(tab.getCode(), tab);
