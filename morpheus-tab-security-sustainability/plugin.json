@@ -2,7 +2,7 @@
   "code": "addon-url",
   "name": "Add-on URL",
   "plugin": "com.example.morpheus.SecSusPlugin",
-  "version": "1.0.17",
+  "version": "1.0.19",
   "minMorpheusVersion": "8.0.0",
   "settings": [
     { "name": "awsSecurityUrlTemplate",       "type": "string", "defaultValue": "https://{region}.console.aws.amazon.com/securityhub/home?region={region}" },
