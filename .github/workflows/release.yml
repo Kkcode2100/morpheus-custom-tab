@@ -44,7 +44,7 @@ jobs:
           body: |
             ### Security & Sustainability Tab plugin ${{ github.ref_name }}
 
-            - Compatible with Morpheus plugin API 1.2.9 (Java 11)
+            - Compatible with Morpheus plugin API 1.2.8 (Java 11)
             - Adds an Instance tab with cloud-native Security and Sustainability dashboards (AWS, Azure, GCP)
 
             Install
