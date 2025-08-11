@@ -39,7 +39,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            ${{ steps.build.outputs.jar_path }}
+            morpheus-tab-security-sustainability/build/libs/*-all.jar
           name: Security & Sustainability Tab ${{ github.ref_name }}
           body: |
             ### Security & Sustainability Tab plugin ${{ github.ref_name }}
