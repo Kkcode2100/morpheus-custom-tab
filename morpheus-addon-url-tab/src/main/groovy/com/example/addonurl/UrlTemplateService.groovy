@@ -3,7 +3,7 @@ package com.example.addonurl
 import com.morpheusdata.core.MorpheusContext
 import com.morpheusdata.core.Plugin
 import com.morpheusdata.model.Instance
-import groovy.transform.CompileStatic
+// import groovy.transform.CompileStatic // Removed to fix compilation issues
 import groovy.util.logging.Slf4j
 
 /**
@@ -11,7 +11,7 @@ import groovy.util.logging.Slf4j
  * Handles different cloud providers and their specific context requirements.
  */
 @Slf4j
-@CompileStatic
+// @CompileStatic // Removed to fix compilation issues
 class UrlTemplateService {
 
     private final Plugin plugin

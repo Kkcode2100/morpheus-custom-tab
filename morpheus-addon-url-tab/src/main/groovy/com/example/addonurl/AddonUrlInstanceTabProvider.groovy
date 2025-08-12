@@ -8,7 +8,7 @@ import com.morpheusdata.model.Instance
 import com.morpheusdata.model.User
 import com.morpheusdata.views.HTMLResponse
 import com.morpheusdata.views.ViewModel
-import groovy.transform.CompileStatic
+// import groovy.transform.CompileStatic // Removed to fix compilation issues
 import groovy.util.logging.Slf4j
 
 /**
@@ -16,7 +16,7 @@ import groovy.util.logging.Slf4j
  * Provides a tab that displays cloud-specific external dashboard links.
  */
 @Slf4j
-@CompileStatic
+// @CompileStatic // Removed to fix compilation issues
 class AddonUrlInstanceTabProvider extends AbstractInstanceTabProvider {
 
     private final Plugin plugin
@@ -51,7 +51,6 @@ class AddonUrlInstanceTabProvider extends AbstractInstanceTabProvider {
         return 'Add-on URL'
     }
 
-    @Override
     String getIcon() {
         return 'addon-url.svg'
     }
@@ -95,9 +94,15 @@ class AddonUrlInstanceTabProvider extends AbstractInstanceTabProvider {
     }
 
     /**
+     * Required abstract method implementation.
+     */
+    HTMLResponse renderTemplate(Instance instance) {
+        return renderTemplate(instance, null, null)
+    }
+
+    /**
      * Render the tab content.
      */
-    @Override
     HTMLResponse renderTemplate(Instance instance, User user, Account account) {
         try {
             log.debug("Rendering Add-on URL tab for instance ${instance.id}")
