@@ -3,7 +3,7 @@ package com.example.addonurl
 import com.morpheusdata.core.MorpheusContext
 import com.morpheusdata.core.Plugin
 import groovy.json.JsonSlurper
-import groovy.transform.CompileStatic
+// import groovy.transform.CompileStatic // Removed to fix compilation issues
 import groovy.util.logging.Slf4j
 
 /**
@@ -11,7 +11,7 @@ import groovy.util.logging.Slf4j
  * Supports both bundled default configuration and runtime override via plugin settings.
  */
 @Slf4j
-@CompileStatic
+// @CompileStatic // Removed to fix compilation issues
 class ConfigService {
 
     private final Plugin plugin
