@@ -1,0 +1,13 @@
+<h3>Add-on URL</h3>
+{{#if buttons.length}}
+  {{#each buttons}}
+    <a class="btn btn-primary mr-2 mb-2"
+       href="{{this.url}}"
+       target="_blank"
+       rel="noopener noreferrer">
+      {{this.label}}
+    </a>
+  {{/each}}
+{{else}}
+  <div class="alert alert-info">No external dashboards configured for this cloud.</div>
+{{/if}}
