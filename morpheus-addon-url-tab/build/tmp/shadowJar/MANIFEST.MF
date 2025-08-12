@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Plugin-Class: com.example.addonurl.AddonUrlPlugin
+Plugin-Version: 1.0.0
+Morpheus-Name: Add-on URL Tab
+Morpheus-Organization: example
+Morpheus-Code: addon-url-tab
+Morpheus-Description: Adds an Instance tab that links to external securi
+ ty dashboards based on cloud provider.
+Morpheus-Logo: assets/images/addon-url.svg
+Morpheus-Min-Appliance-Version: 8.0.0
+

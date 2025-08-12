@@ -1,0 +1,13 @@
+{
+  "name": "Add-on URL Tab",
+  "plugin": "com.example.addonurl.AddonUrlPlugin",
+  "version": "1.0.0",
+  "minMorpheusVersion": "8.0.0",
+  "providerTypes": [
+    { "code": "instanceTab", "name": "Instance Tab" }
+  ],
+  "settings": [
+    { "name": "addonUrlJson", "type": "text", "inputType": "textarea", "defaultValue": "" },
+    { "name": "defaultAwsRegion", "type": "string", "defaultValue": "" }
+  ]
+}

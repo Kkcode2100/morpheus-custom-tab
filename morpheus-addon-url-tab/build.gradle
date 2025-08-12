@@ -1,0 +1,61 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "com.github.johnrengelman:shadow:8.1.1"
+        classpath "com.morpheusdata:morpheus-plugin-gradle:$morpheusApiVersion"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'com.morpheusdata.morpheus-plugin-gradle'
+
+group = 'com.example'
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+java {
+    sourceCompatibility = JavaVersion.toVersion('17')
+    targetCompatibility = JavaVersion.toVersion('11')
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+configurations { provided }
+
+dependencies {
+    provided "com.morpheusdata:morpheus-plugin-api:$morpheusApiVersion"
+    provided "org.codehaus.groovy:groovy-all:$groovyVersion"
+    implementation "org.slf4j:slf4j-api:1.7.36"
+}
+
+sourceSets {
+    main {
+        compileClasspath += configurations.provided
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+            'Plugin-Class': 'com.example.addonurl.AddonUrlPlugin',
+            'Plugin-Version': version,
+            'Morpheus-Name': 'Add-on URL Tab',
+            'Morpheus-Organization': 'example',
+            'Morpheus-Code': 'addon-url-tab',
+            'Morpheus-Description': 'Adds an Instance tab that links to external security dashboards based on cloud provider.',
+            'Morpheus-Logo': 'assets/images/addon-url.svg',
+            'Morpheus-Min-Appliance-Version': '8.0.0'
+        )
+    }
+}
+
+tasks.assemble.dependsOn tasks.shadowJar

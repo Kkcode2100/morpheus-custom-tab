@@ -1,0 +1,26 @@
+{
+  "providers": {
+    "azure": [
+      {
+        "label": "Azure Security (Defender) – Overview",
+        "url": "https://portal.azure.com/#view/Microsoft_Azure_Security/SecurityMenuBlade/~/overview"
+      },
+      {
+        "label": "Azure Advisor – Recommendations",
+        "url": "https://portal.azure.com/#view/Microsoft_Azure_Advisor/AzureAdvisorBlade/~/recommendations"
+      }
+    ],
+    "googlecloud": [
+      {
+        "label": "GCP Security Command Center",
+        "url": "https://console.cloud.google.com/security/command-center?project={projectId}"
+      }
+    ],
+    "amazon": [
+      {
+        "label": "AWS Security Hub – Dashboard",
+        "url": "https://{region}.console.aws.amazon.com/securityhub/home?region={region}#/dashboard"
+      }
+    ]
+  }
+}
